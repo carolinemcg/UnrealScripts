@@ -1,4 +1,8 @@
 import unreal
+import sys
+sys.path.append("C:\Program Files\Python39\Lib\site-packages")
+
+from PySide2 import QtCore, QtGui, QtUiTools, QtWidgets
 
 def rename_assets(search_pattern, replace_pattern, use_case):
     # instances of unreal classes
@@ -31,6 +35,43 @@ def rename_assets(search_pattern, replace_pattern, use_case):
 
     unreal.log("Replaced {} of {} assets".format(replaced, num_assets))
 
-rename_assets("Old", "New", False)
+class RenameGUI(QtWidgets.QWidget):
+    def __init__(self, parent= None):
+        super(RenameGUI, self).__init__(parent)
+
+        # load the created GUI
+        self.widget = QtUiTools.QUiLoader().load("C:\Qt Projects\search_replace\\form.ui")
+        self.widget.setParent(self)
+
+        # set the size of the widget
+        self.widget.setGeometry(0,0, self.widget.width(), self.widget.height())
+
+        # find the interaction elements 
+        self.search = self.widget.findChild(QtWidgets.QLineEdit, "searchPattern")
+        self.replace = self.widget.findChild(QtWidgets.QLineEdit, "replacePattern")
+
+        self.use_case = self.widget.findChild(QtWidgets.QCheckBox, "caseCheck")
+
+        # find and assign trigger to pushButton
+        self.rename_button = self.widget.findChild(QtWidgets.QPushButton, "pushButton")
+        self.rename_button.clicked.connect(self.rename_handler)
+
+
+    def rename_handler(self):
+        search_pattern = self.search.text()
+        replace_pattern = self.replace.text()
+        use_case = self.use_case.isChecked()
+
+        rename_assets(search_pattern, replace_pattern, use_case)
+
+# only create an instance when it is not already running
+app = None
+if not QtWidgets.QApplication.instance():
+    app = QtWidgets.QApplication(sys.argv)
+
+
+# start the GUI
+window = RenameGUI()
+window.show()
 
 

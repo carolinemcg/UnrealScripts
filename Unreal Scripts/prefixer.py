@@ -8,7 +8,7 @@ system_lib = unreal.SystemLibrary()
 # prefix mapping
 prefix_mapping = {}
 
-with open("C:\\DEV\\Udemy\\Becoming an Unreal Automation Expert\\prefix_mapping.json", "r") as json_file:
+with open("C:\\UnrealScripts\\Unreal Scripts\\prefix_mapping.json", "r") as json_file:
     prefix_mapping = json.loads(json_file.read())
 
 # get the slected assets
